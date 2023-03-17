@@ -1,0 +1,63 @@
+using UnityEngine;
+
+public class DisplayPlayerName : MonoBehaviour
+{
+    public void OnGameOver(PlayerState[] playerStates)
+    {
+        string playerNameMostKills = GetPlayerNameMostKills(playerStates);
+        string playerNameMostFlags = GetPlayerNameMostFlags(playerStates);
+
+        string playerNameMostScoreKills = GetPlayerNameScore(playerStates, state => state.kills);
+        string playerNameMostScoreFlags = GetPlayerNameScore(playerStates, stateDelegate => stateDelegate.flagsCaptured);
+    }
+
+    private string GetPlayerNameMostKills(PlayerState[] playerStates)
+    {
+        string player = "";
+        int score = 0;
+        foreach (PlayerState item in playerStates)
+        {
+            if(item.kills >  score)
+            {
+                score = item.kills;
+                player = item.name;
+            }
+        }
+        return player;
+    }
+    private string GetPlayerNameMostFlags(PlayerState[] playerStates)
+    {
+        string player = "";
+        int score = 0;
+        foreach (PlayerState item in playerStates)
+        {
+            if (item.flagsCaptured > score)
+            {
+                score = item.flagsCaptured;
+                player = item.name;
+            }
+        }
+        return player;
+    }
+
+    private delegate int ScoreDelegate(PlayerState stateDelegate);
+
+    //private int ScoreKillsCount(PlayerState state) => state.kills;
+
+    //private ScoreDelegate scoreFlagsCount = state => state.flagsCaptured;
+
+    private string GetPlayerNameScore(PlayerState[] playerStates,ScoreDelegate scoreDelegate)
+    {
+        string player = "";
+        int bastScore = 0;
+        foreach (PlayerState item in playerStates)
+        {
+            int currentScore = scoreDelegate(item);
+            if (currentScore > bastScore)
+            {
+                bastScore = currentScore;
+                player = item.name;
+            }
+        }
+        return player;
+    }
